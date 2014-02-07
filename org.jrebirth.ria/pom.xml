@@ -3,9 +3,9 @@
 
 	<groupId>org.jrebirth</groupId>
 	<artifactId>ria</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
-	
+
 	<name>JRebirth Application Framework RIA Parent POM</name>
 	<url>http://www.jrebirth.org/</url>
 	<description>Parent Pom for Rich Internet Application</description>
@@ -15,22 +15,23 @@
 
 		<keystore>${project.basedir}/JRebirth.jks</keystore>
 
-		<storepass>defaultpass</storepass>
+		<storepass>storepass</storepass>
 		<storetype>JKS</storetype>
-		<keyalias>presentation</keyalias>
-		<keypass>defaultpass</keypass>
+		<keyalias>keyalias</keyalias>
+		<keypass>keypass</keypass>
 
 		<deletekeystore>true</deletekeystore>
 		<genkeystore>true</genkeystore>
 
-		<permissions>all-permissions</permissions> <!-- sandbox -->
+		<permissions>all-permissions</permissions> <!-- or sandbox -->
 		<deployUrl>http://apps.jrebirth.org</deployUrl>
 		<deployPath>${project.artifactId}/${project.version}</deployPath>
+		<codebase>${deployUrl}/${deployPath}</codebase>
 
 		<jnlpFilename>JRebirth.jnlp</jnlpFilename>
 		<preloaderClass>org.jrebirth.preloader.JRebirthPreloader</preloaderClass>
-		
-		<appClass></appClass>
+
+		<appClass>org.jrebirth.YourApplication</appClass>
 
 		<appletWidth>1024</appletWidth>
 		<appletHeight>768</appletHeight>
@@ -38,7 +39,7 @@
 		<updateCheck>background</updateCheck>
 		<updatePolicy>prompt-update</updatePolicy>
 
-		<ciJob>JRebirth-master</ciJob>
+		<ciJob>CustomJob-master</ciJob>
 
 	</properties>
 
@@ -51,9 +52,6 @@
 		<system>Jenkins</system>
 		<url>${ciJob}</url>
 	</ciManagement>
-
-	<!-- <scm> <connection>scm:git:git://github.com/JRebirth/JRebirth-Presentation.git</connection> <developerConnection>scm:git:ssh://git@github.com/JRebirth/JRebirth-Presentation.git</developerConnection> 
-		<url>https://github.com/JRebirth/JRebirth-Presentation</url> </scm> -->
 
 	<organization>
 		<name>JRebirth Open Group</name>
@@ -124,12 +122,8 @@
 								<Main-Class>${appClass}</Main-Class>
 								<JavaFX-Application-Class>${appClass}</JavaFX-Application-Class>
 
-<!-- 								<JavaFX-Class-Path>jaxb-api-2.2.1.jar
-									stax-api-1.0-2.jar activation-1.1.jar jaxb-impl-2.2.1.jar presentation-0.7.6-SNAPSHOT.jar core-0.7.6-SNAPSHOT.jar
-									logback-classic-1.0.13.jar
-									logback-core-1.0.13.jar
-									slf4j-api-1.7.5.jar</JavaFX-Class-Path>
- -->
+								<!-- <JavaFX-Class-Path> jaxb-api-2.2.1.jar stax-api-1.0-2.jar activation-1.1.jar jaxb-impl-2.2.1.jar presentation-0.7.6-SNAPSHOT.jar core-0.7.6-SNAPSHOT.jar logback-classic-1.0.13.jar logback-core-1.0.13.jar 
+									slf4j-api-1.7.5.jar </JavaFX-Class-Path> -->
 								<Permissions>${permissions}</Permissions>
 								<Codebase>${deployUrl}</Codebase>
 
@@ -166,7 +160,7 @@
 							<Application-Name>${project.name}</Application-Name>
 							<Trusted-Library>true</Trusted-Library>
 							<Permissions>${permissions}</Permissions>
-							<Codebase>${deployUrl}/${deployPath}</Codebase>
+							<Codebase>${codebase}</Codebase>
 							<Trusted-Only>true</Trusted-Only>
 						</updateManifestEntries>
 
@@ -175,23 +169,17 @@
 						<excludeTransitive>false</excludeTransitive>
 
 						<libPath>lib</libPath>
-
-						<!-- <resourcesDirectory>${project.basedir}/src/main/jnlp/resources</resourcesDirectory> -->
-						<codebase>${deployUrl}/${deployPath}</codebase>
+						<codebase>${codebase}</codebase>
 
 						<jnlp>
-
-							<!-- <inputTemplateResourcePath>${project.basedir}</inputTemplateResourcePath> <inputTemplate>src/main/jnlp/template.vm</inputTemplate> -->
 							<outputFile>${jnlpFilename}</outputFile>
 							<mainClass>${appClass}</mainClass>
 							<offlineAllowed>true</offlineAllowed>
 							<allPermissions>true</allPermissions>
-
 						</jnlp>
 
 						<sign>
 							<keystore>${keystore}</keystore>
-							<!-- MUST BE PROVIDED BY COMMAND LINE ARGUMENTS -Dstorepass=xxx -Dkeypass=xxx -->
 							<keypass>${keypass}</keypass>
 							<storepass>${storepass}</storepass>
 							<storetype>${storetype}</storetype>
@@ -223,9 +211,7 @@
 
 						<install>false</install>
 						<verbose>true</verbose>
-
 					</configuration>
-
 
 				</plugin>
 
@@ -235,6 +221,7 @@
 					<artifactId>sonar-maven3-plugin</artifactId>
 					<version>3.3.2</version>
 				</plugin>
+
 			</plugins>
 		</pluginManagement>
 
@@ -265,7 +252,6 @@
 			<name>JRebirth Sites</name>
 			<url>ftp://jrebirth.org/sites/${project.groupId}.${project.artifactId}-${project.version}</url>
 		</site>
-
 	</distributionManagement>
 
 </project>
