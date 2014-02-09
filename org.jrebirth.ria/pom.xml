@@ -75,6 +75,7 @@
 				<directory>${basedir}/src/main/java</directory>
 				<includes>
 					<include>**/*.fxml</include>
+					<include>**/*.properties</include>
 					<include>**/*.txt</include>
 				</includes>
 			</resource>
@@ -121,12 +122,8 @@
 								<JavaFX-Version>2.0</JavaFX-Version>
 								<Main-Class>${appClass}</Main-Class>
 								<JavaFX-Application-Class>${appClass}</JavaFX-Application-Class>
-
 								<!-- <JavaFX-Class-Path> jaxb-api-2.2.1.jar stax-api-1.0-2.jar activation-1.1.jar jaxb-impl-2.2.1.jar presentation-0.7.6-SNAPSHOT.jar core-0.7.6-SNAPSHOT.jar logback-classic-1.0.13.jar logback-core-1.0.13.jar 
 									slf4j-api-1.7.5.jar </JavaFX-Class-Path> -->
-								<Permissions>${permissions}</Permissions>
-								<Codebase>${deployUrl}</Codebase>
-
 							</manifestEntries>
 
 							<manifest>
