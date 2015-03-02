@@ -207,6 +207,8 @@
 
 						</sign>
 
+						<unsignAlreadySignedJars>true</unsignAlreadySignedJars>
+
 						<pack200>
 							<enabled>false</enabled>
 						</pack200>
