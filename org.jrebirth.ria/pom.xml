@@ -210,7 +210,7 @@
 						<unsignAlreadySignedJars>true</unsignAlreadySignedJars>
 
 						<pack200>
-							<enabled>false</enabled>
+							<enabled>true</enabled>
 						</pack200>
 						<gzip>true</gzip>
 
