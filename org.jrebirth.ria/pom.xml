@@ -122,8 +122,6 @@
 								<JavaFX-Version>2.0</JavaFX-Version>
 								<Main-Class>${appClass}</Main-Class>
 								<JavaFX-Application-Class>${appClass}</JavaFX-Application-Class>
-								<!-- <JavaFX-Class-Path> jaxb-api-2.2.1.jar stax-api-1.0-2.jar activation-1.1.jar jaxb-impl-2.2.1.jar presentation-0.7.6-SNAPSHOT.jar core-0.7.6-SNAPSHOT.jar logback-classic-1.0.13.jar logback-core-1.0.13.jar 
-									slf4j-api-1.7.5.jar </JavaFX-Class-Path> -->
 							</manifestEntries>
 
 							<manifest>
@@ -249,22 +247,105 @@
 
 	<distributionManagement>
 		<repository>
-			<id>JRebirth-Release</id>
-			<name>JRebirth Releases Repository</name>
-			<url>http://repo.jrebirth.org/jrebirth-release-local</url>
+			<id>${repositoryId}</id>
+			<name>${repositoryName}</name>
+			<url>${repositoryUrl}</url>
 		</repository>
-
 		<snapshotRepository>
-			<id>JRebirth-Snapshot</id>
-			<name>JRebirth Snasphots Repository</name>
-			<url>http://repo.jrebirth.org/jrebirth-snapshot-local</url>
+			<id>${snapshotRepositoryId}</id>
+			<name>${snapshotRepositoryName}</name>
+			<url>${snapshotRepositoryUrl}</url>
 		</snapshotRepository>
-
-		<site>
-			<id>JRebirth_Sites</id>
-			<name>JRebirth Sites</name>
-			<url>ftp://jrebirth.org/sites/${project.groupId}.${project.artifactId}-${project.version}</url>
-		</site>
 	</distributionManagement>
+
+	<profiles>
+
+		<!-- Sign all artifacts with JRebirth GPG key -->
+		<profile>
+			<id>GPG</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- Only one of the following profile must be activated : OJO, Bintray, JRebirth -->
+
+		<!-- Open Source Artifactory -->
+		<profile>
+			<id>OJO</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<!-- Release repository -->
+				<repositoryId>oss-jfrog-artifactory</repositoryId>
+				<repositoryName>oss-jfrog-artifactory-releases</repositoryName>
+				<repositoryUrl>http://oss.jfrog.org/artifactory/oss-release-local</repositoryUrl>
+				<!-- Snapshot repository -->
+				<snapshotRepositoryId>oss-jfrog-artifactory</snapshotRepositoryId>
+				<snapshotRepositoryName>oss-jfrog-artifactory-snapshots</snapshotRepositoryName>
+				<snapshotRepositoryUrl>http://oss.jfrog.org/artifactory/oss-snapshot-local</snapshotRepositoryUrl>
+			</properties>
+		</profile>
+
+		<!-- JCenter repository for release and central sync -->
+		<profile>
+			<id>Bintray</id>
+			<properties>
+				<!-- Release repository -->
+				<repositoryId>bintray-jrebirth-JRebirth-RIA</repositoryId>
+				<repositoryName>jrebirth-JRebirth-RIA</repositoryName>
+				<repositoryUrl>https://api.bintray.com/maven/jrebirth/JRebirth/RIA/</repositoryUrl>
+				<!-- Snapshot repository -->
+				<snapshotRepositoryId>bintray-jrebirth-JRebirth-RIA</snapshotRepositoryId>
+				<snapshotRepositoryName>jrebirth-JRebirth-RIA</snapshotRepositoryName>
+				<snapshotRepositoryUrl>https://api.bintray.com/maven/jrebirth/JRebirth/RIA/</snapshotRepositoryUrl>
+			</properties>
+		</profile>
+
+		<!-- Private repository for own tests & development -->
+		<profile>
+			<id>JRebirth</id>
+			<properties>
+				<!-- Release repository -->
+				<repositoryId>JRebirth-Release</repositoryId>
+				<repositoryName>JRebirth Releases Repository</repositoryName>
+				<repositoryUrl>http://repo.jrebirth.org/jrebirth-release-local</repositoryUrl>
+				<!-- Snapshot repository -->
+				<snapshotRepositoryId>JRebirth-Snapshot</snapshotRepositoryId>
+				<snapshotRepositoryName>JRebirth Snasphots Repository</snapshotRepositoryName>
+				<snapshotRepositoryUrl>http://repo.jrebirth.org/jrebirth-snapshot-local</snapshotRepositoryUrl>
+			</properties>
+		</profile>
+	</profiles>
+	
+	<developers>
+		<developer>
+			<id>jr1</id>
+			<name>Bordes Sébastien</name>
+			<email>seb@jrebirth.org</email>
+			<url>blog.webeo.fr</url>
+			<organization>JRebirth</organization>
+			<organizationUrl>www.jrebirth.org</organizationUrl>
+			<roles>
+				<role>JRebirth Designer</role>
+			</roles>
+		</developer>
+	</developers>
 
 </project>
