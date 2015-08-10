@@ -348,4 +348,10 @@
 		</developer>
 	</developers>
 
+	<scm>
+		<url>https://github.com/JRebirth/JRebirth-RIA-POM</url>
+		<connection>scm:git:git://github.com/JRebirth/JRebirth-RIA-POM.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/JRebirth/JRebirth-RIA-POM</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
 </project>
