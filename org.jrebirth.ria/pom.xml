@@ -121,6 +121,7 @@
 					<configuration>
 						<archive>
 							<manifestEntries>
+								<JavaFX-Version>8.0</JavaFX-Version>
 								<Main-Class>${appClass}</Main-Class>
 								<!--<JavaFX-Application-Class>${appClass}</JavaFX-Application-Class> -->
 							</manifestEntries>
@@ -309,6 +310,53 @@
 				</plugin>
 
 
+<!-- 			<plugin>
+				<groupId>com.github.wvengen</groupId>
+				<artifactId>proguard-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>proguard</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<options>
+						<option>-keepclasseswithmembers public class * {
+							public static void main(java.lang.String[]);
+							}
+						</option>
+						<option>-allowaccessmodification</option>
+						<option>-keepattributes Signature</option>
+						<option>-keepattributes *Annotation*</option>
+
+						<option>-dontoptimize</option>
+						<option>-dontshrink</option>
+
+						< ! - - Custom Option for JRebirth Presentation Engine - - >
+						<option>-keep public class * implements org.jrebirth.af.api.ui.Model</option>
+
+					</options>
+					<libs>
+						<lib>${java.home}/lib/rt.jar</lib>
+						<lib>${java.home}/lib/ext/jfxrt.jar</lib>
+					</libs>
+				</configuration>
+			</plugin>
+			
+			-->
+
+			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>webstart-maven-plugin</artifactId> </plugin> -->
+			<!-- <plugin> <groupId>com.messapix.ftatr.jfxmobile</groupId> <artifactId>jfxmobile-maven-plugin</artifactId> <version>1.0.0-b1</version> <extensions>true</extensions> <configuration> <mainClass>${appClass}</mainClass> 
+				<android> <manifest>lib/android/AndroidManifest.xml</manifest> <androidSdk>D:\FXPort\android-sdk-windows</androidSdk> <dalvikSdk>D:\FXPort\dalvik-sdk</dalvikSdk> <processJava8Dependencies>true</processJava8Dependencies> 
+				<dependencies> <dependency> <groupId>com.gluonhq</groupId> <artifactId>charm-down-android</artifactId> <version>0.0.3</version> <scope>runtime</scope> </dependency> </dependencies> </android> <desktop> 
+				<dependencies> <dependency> <groupId>com.gluonhq</groupId> <artifactId>charm-down-desktop</artifactId> <version>0.0.3</version> <scope>runtime</scope> </dependency> </dependencies> </desktop> <ios> <dependencies> 
+				<dependency> <groupId>com.gluonhq</groupId> <artifactId>charm-down-ios</artifactId> <version>0.0.3</version> <scope>runtime</scope> </dependency> </dependencies> </ios> </configuration> </plugin> <plugin> 
+				<groupId>org.sonatype.install4j</groupId> <artifactId>install4j-maven-plugin</artifactId> <executions> <execution> <id>compile-installers</id> <phase>package</phase> <goals> <goal>compile</goal> </goals> 
+				<configuration> <projectFile>${project.basedir}/src/main/installer/jaf.install4j</projectFile> </configuration> </execution> </executions> </plugin> -->
+
+
 				<!-- <plugin> <groupId>com.messapix.ftatr.jfxmobile</groupId> <artifactId>jfxmobile-maven-plugin</artifactId> <version>1.0.0-b1</version> <extensions>true</extensions> <executions> <execution> <phase>install</phase> 
 					<goals> <goal>android</goal> </goals> </execution> </executions> <configuration> <mainClass>${appClass}</mainClass> <android> <manifest>lib/android/AndroidManifest.xml</manifest> <androidSdk>D:\FXPort\android-sdk-windows</androidSdk> 
 					<dalvikSdk>D:\FXPort\dalvik-sdk</dalvikSdk> <processJava8Dependencies>true</processJava8Dependencies> <dependencies> <dependency> <groupId>com.gluonhq</groupId> <artifactId>charm-down-android</artifactId> 
@@ -466,6 +514,12 @@
 			</build>
 		</profile>
 
+		<profile>
+			<id>INSTALLER</id>
+			<properties>
+				<install4j.home>C:\Program Files\install4j6</install4j.home>
+			</properties>
+		</profile>
 
 		<!-- Sign all artifacts with JRebirth GPG key -->
 		<profile>
