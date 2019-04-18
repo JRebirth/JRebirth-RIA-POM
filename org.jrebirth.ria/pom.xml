@@ -1,9 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.jrebirth</groupId>
 	<artifactId>ria</artifactId>
-	<version>3.0.1-SNAPSHOT</version>
+	<version>4.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>JRebirth Application Framework RIA Parent POM</name>
@@ -13,33 +14,10 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<keystore>${project.basedir}/JRebirth.jks</keystore>
-
-		<storepass>storepass</storepass>
-		<storetype>JKS</storetype>
-		<keyalias>keyalias</keyalias>
-		<keypass>keypass</keypass>
-
-		<deletekeystore>true</deletekeystore>
-		<genkeystore>true</genkeystore>
-
-		<permissions>all-permissions</permissions> <!-- or sandbox -->
-		<deployUrl>http://apps.jrebirth.org</deployUrl>
-		<deployPath>${project.artifactId}/${project.version}</deployPath>
-		<codebase>${deployUrl}/${deployPath}/jnlp</codebase>
-
 		<archiveName>JRebirth</archiveName>
 		<exeIcon>JRebirth.ico</exeIcon>
 		<preloaderClass>org.jrebirth.af.preloader.JRebirthPreloader</preloaderClass>
 		<appClass>org.jrebirth.YourApplication</appClass>
-
-		<appletWidth>1024</appletWidth>
-		<appletHeight>768</appletHeight>
-
-		<updateCheck>background</updateCheck>
-		<updatePolicy>prompt-update</updatePolicy>
-
-		<ciJob>CustomJob-master</ciJob>
 
 	</properties>
 
@@ -105,10 +83,9 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.6.1</version>
+					<version>3.8.0</version>
 					<configuration>
-						<source>1.8</source>
-						<target>1.8</target>
+						<release>11</release>
 						<encoding>UTF-8</encoding>
 					</configuration>
 				</plugin>
@@ -116,14 +93,12 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.5</version>
+					<version>3.1.0</version>
 
 					<configuration>
 						<archive>
 							<manifestEntries>
-								<JavaFX-Version>8.0</JavaFX-Version>
 								<Main-Class>${appClass}</Main-Class>
-								<!--<JavaFX-Application-Class>${appClass}</JavaFX-Application-Class> -->
 							</manifestEntries>
 
 							<manifest>
@@ -164,6 +139,7 @@
 						<finalName>${archiveName}-${project.version}</finalName>
 					</configuration>
 				</plugin>
+
 				<plugin>
 					<groupId>com.akathist.maven.plugins.launch4j</groupId>
 					<artifactId>launch4j-maven-plugin</artifactId>
@@ -194,7 +170,7 @@
 									<fileVersion>1.0.0.0</fileVersion>
 									<txtFileVersion>${project.version}</txtFileVersion>
 									<fileDescription>${project.name}</fileDescription>
-									<copyright>JRebirth 2016</copyright>
+									<copyright>JRebirth 2019</copyright>
 									<productVersion>1.0.0.0</productVersion>
 									<txtProductVersion>1.0.0.0</txtProductVersion>
 									<productName>${project.name}</productName>
@@ -209,99 +185,6 @@
 
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>webstart-maven-plugin</artifactId>
-					<version>1.0-beta-7</version>
-
-					<dependencies>
-						<dependency>
-							<groupId>org.codehaus.mojo</groupId>
-							<artifactId>keytool-api-1.7</artifactId>
-							<version>1.4</version>
-						</dependency>
-						<dependency>
-							<groupId>org.codehaus.mojo</groupId>
-							<artifactId>webstart-pack200-impl</artifactId>
-							<version>1.0-beta-6</version>
-						</dependency>
-					</dependencies>
-
-					<executions>
-						<execution>
-							<phase>package</phase>
-							<goals>
-								<goal>jnlp-inline</goal>
-							</goals>
-						</execution>
-					</executions>
-
-					<configuration>
-						
-						<filenameMapping>full</filenameMapping>
-
-						<updateManifestEntries>
-							<Application-Name>${project.name}</Application-Name>
-							<Trusted-Library>true</Trusted-Library>
-							<Permissions>${permissions}</Permissions>
-							<Codebase>${codebase}</Codebase>
-							<Trusted-Only>true</Trusted-Only>
-						</updateManifestEntries>
-
-
-						<jnlpFiles>${archiveName}.jnlp</jnlpFiles>
-						<excludeTransitive>false</excludeTransitive>
-
-						<libPath>lib</libPath>
-						<codebase>${codebase}</codebase>
-
-						<jnlp>
-							<outputFile>${archiveName}.jnlp</outputFile>
-							<mainClass>${appClass}</mainClass>
-							<offlineAllowed>true</offlineAllowed>
-							<allPermissions>true</allPermissions>
-						</jnlp>
-
-						<sign>
-							<keystore>${keystore}</keystore>
-							<keypass>${keypass}</keypass>
-							<storepass>${storepass}</storepass>
-							<storetype>${storetype}</storetype>
-
-							<alias>${keyalias}</alias>
-
-							<validity>360</validity>
-							<dnameCn>JRebirth Self-signed Certificate</dnameCn>
-							<dnameOu>JRebirth OSS</dnameOu>
-							<dnameO>JRebirth</dnameO>
-							<dnameL>Toulouse</dnameL>
-							<dnameSt>Haute-Garonne</dnameSt>
-							<dnameC>FR</dnameC>
-							<verify>true</verify>
-
-							<keystoreConfig>
-								<delete>${deletekeystore}</delete>
-								<gen>${genkeystore}</gen>
-							</keystoreConfig>
-
-						</sign>
-
-						<unsignAlreadySignedJars>true</unsignAlreadySignedJars>
-
-						<pack200>
-							<enabled>true</enabled>
-						</pack200>
-						<gzip>true</gzip>
-						<archive>${project.build.directory}/${archiveName}-${project.version}.zip</archive>
-
-						<outputJarVersions>false</outputJarVersions>
-
-						<install>false</install>
-						<verbose>true</verbose>
-					</configuration>
-
-				</plugin>
-
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>wagon-maven-plugin</artifactId>
 					<version>1.0</version>
 					<configuration>
@@ -311,51 +194,19 @@
 				</plugin>
 
 
-<!-- 			<plugin>
-				<groupId>com.github.wvengen</groupId>
-				<artifactId>proguard-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>proguard</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<options>
-						<option>-keepclasseswithmembers public class * {
-							public static void main(java.lang.String[]);
-							}
-						</option>
-						<option>-allowaccessmodification</option>
-						<option>-keepattributes Signature</option>
-						<option>-keepattributes *Annotation*</option>
+				<!-- <plugin> <groupId>com.github.wvengen</groupId> <artifactId>proguard-maven-plugin</artifactId> <executions> <execution> <phase>package</phase> <goals> <goal>proguard</goal> </goals> </execution> 
+					</executions> <configuration> <options> <option>-keepclasseswithmembers public class * { public static void main(java.lang.String[]); } </option> <option>-allowaccessmodification</option> <option>-keepattributes 
+					Signature</option> <option>-keepattributes *Annotation*</option> <option>-dontoptimize</option> <option>-dontshrink</option> < ! - - Custom Option for JRebirth Presentation Engine - - > <option>-keep public 
+					class * implements org.jrebirth.af.api.ui.Model</option> </options> <libs> <lib>${java.home}/lib/rt.jar</lib> <lib>${java.home}/lib/ext/jfxrt.jar</lib> </libs> </configuration> </plugin> -->
 
-						<option>-dontoptimize</option>
-						<option>-dontshrink</option>
-
-						< ! - - Custom Option for JRebirth Presentation Engine - - >
-						<option>-keep public class * implements org.jrebirth.af.api.ui.Model</option>
-
-					</options>
-					<libs>
-						<lib>${java.home}/lib/rt.jar</lib>
-						<lib>${java.home}/lib/ext/jfxrt.jar</lib>
-					</libs>
-				</configuration>
-			</plugin>
-			
-			-->
-
-			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>webstart-maven-plugin</artifactId> </plugin> -->
-			<!-- <plugin> <groupId>com.messapix.ftatr.jfxmobile</groupId> <artifactId>jfxmobile-maven-plugin</artifactId> <version>1.0.0-b1</version> <extensions>true</extensions> <configuration> <mainClass>${appClass}</mainClass> 
-				<android> <manifest>lib/android/AndroidManifest.xml</manifest> <androidSdk>D:\FXPort\android-sdk-windows</androidSdk> <dalvikSdk>D:\FXPort\dalvik-sdk</dalvikSdk> <processJava8Dependencies>true</processJava8Dependencies> 
-				<dependencies> <dependency> <groupId>com.gluonhq</groupId> <artifactId>charm-down-android</artifactId> <version>0.0.3</version> <scope>runtime</scope> </dependency> </dependencies> </android> <desktop> 
-				<dependencies> <dependency> <groupId>com.gluonhq</groupId> <artifactId>charm-down-desktop</artifactId> <version>0.0.3</version> <scope>runtime</scope> </dependency> </dependencies> </desktop> <ios> <dependencies> 
-				<dependency> <groupId>com.gluonhq</groupId> <artifactId>charm-down-ios</artifactId> <version>0.0.3</version> <scope>runtime</scope> </dependency> </dependencies> </ios> </configuration> </plugin> <plugin> 
-				<groupId>org.sonatype.install4j</groupId> <artifactId>install4j-maven-plugin</artifactId> <executions> <execution> <id>compile-installers</id> <phase>package</phase> <goals> <goal>compile</goal> </goals> 
-				<configuration> <projectFile>${project.basedir}/src/main/installer/jaf.install4j</projectFile> </configuration> </execution> </executions> </plugin> -->
+				<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>webstart-maven-plugin</artifactId> </plugin> -->
+				<!-- <plugin> <groupId>com.messapix.ftatr.jfxmobile</groupId> <artifactId>jfxmobile-maven-plugin</artifactId> <version>1.0.0-b1</version> <extensions>true</extensions> <configuration> <mainClass>${appClass}</mainClass> 
+					<android> <manifest>lib/android/AndroidManifest.xml</manifest> <androidSdk>D:\FXPort\android-sdk-windows</androidSdk> <dalvikSdk>D:\FXPort\dalvik-sdk</dalvikSdk> <processJava8Dependencies>true</processJava8Dependencies> 
+					<dependencies> <dependency> <groupId>com.gluonhq</groupId> <artifactId>charm-down-android</artifactId> <version>0.0.3</version> <scope>runtime</scope> </dependency> </dependencies> </android> <desktop> 
+					<dependencies> <dependency> <groupId>com.gluonhq</groupId> <artifactId>charm-down-desktop</artifactId> <version>0.0.3</version> <scope>runtime</scope> </dependency> </dependencies> </desktop> <ios> <dependencies> 
+					<dependency> <groupId>com.gluonhq</groupId> <artifactId>charm-down-ios</artifactId> <version>0.0.3</version> <scope>runtime</scope> </dependency> </dependencies> </ios> </configuration> </plugin> <plugin> 
+					<groupId>org.sonatype.install4j</groupId> <artifactId>install4j-maven-plugin</artifactId> <executions> <execution> <id>compile-installers</id> <phase>package</phase> <goals> <goal>compile</goal> </goals> 
+					<configuration> <projectFile>${project.basedir}/src/main/installer/jaf.install4j</projectFile> </configuration> </execution> </executions> </plugin> -->
 
 
 				<!-- <plugin> <groupId>com.messapix.ftatr.jfxmobile</groupId> <artifactId>jfxmobile-maven-plugin</artifactId> <version>1.0.0-b1</version> <extensions>true</extensions> <executions> <execution> <phase>install</phase> 
@@ -372,13 +223,6 @@
 					&lt;methods&gt;; } </option> <option>-dontoptimize</option> <option>-dontshrink</option> </options> <libs> <lib>${java.home}/lib/rt.jar</lib> <lib>${java.home}/lib/ext/jfxrt.jar</lib> </libs> </configuration> 
 					</plugin> -->
 
-				<!-- Project Quality -->
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>sonar-maven-plugin</artifactId>
-					<version>2.5</version>
-				</plugin>
-
 			</plugins>
 		</pluginManagement>
 
@@ -388,13 +232,13 @@
 				<artifactId>wagon-ftp</artifactId>
 				<version>2.2</version>
 			</extension>
-			
+
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ssh</artifactId>
 				<version>3.0.0</version>
 			</extension>
-			
+
 		</extensions>
 	</build>
 
@@ -412,46 +256,6 @@
 	</distributionManagement>
 
 	<profiles>
-
-		<profile>
-			<id>WebStart</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>webstart-maven-plugin</artifactId>
-					</plugin>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>wagon-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>deploy-webstart-archive</id>
-								<phase>site</phase>
-								<goals>
-									<goal>upload-single</goal>
-								</goals>
-								<configuration>
-									<fromFile>${project.build.directory}/${archiveName}-${project.version}.zip</fromFile>
-									<toFile>${deployPath}/${archiveName}-${project.version}.zip</toFile>
-								</configuration>
-							</execution>
-							<execution>
-								<id>deploy-webstart-jnlp</id>
-								<phase>site</phase>
-								<goals>
-									<goal>upload</goal>
-								</goals>
-								<configuration>
-									<fromDir>${project.build.directory}/jnlp</fromDir>
-									<toDir>${deployPath}/jnlp</toDir>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
 
 		<profile>
 			<id>AutoJar</id>
@@ -601,7 +405,7 @@
 			<id>jr1</id>
 			<name>Bordes Sébastien</name>
 			<email>seb@jrebirth.org</email>
-			<url>blog.webeo.fr</url>
+			<url>blog.jrebirth.org</url>
 			<organization>JRebirth</organization>
 			<organizationUrl>www.jrebirth.org</organizationUrl>
 			<roles>
