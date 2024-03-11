@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -14,10 +15,13 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<archiveName>JRebirth</archiveName>
 		<exeIcon>JRebirth.ico</exeIcon>
 		<preloaderClass>org.jrebirth.af.preloader.JRebirthPreloader</preloaderClass>
+		<archiveName>YourApplication</archiveName>
+		<appName>Your Application</appName>
+		<mainModule>org.jrebirth.module</mainModule>
 		<appClass>org.jrebirth.YourApplication</appClass>
+		<appVersion>1.0.0</appVersion>
 
 	</properties>
 
@@ -85,100 +89,61 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.8.0</version>
 					<configuration>
-						<release>11</release>
+						<release>21</release>
 						<encoding>UTF-8</encoding>
 					</configuration>
 				</plugin>
 
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.1.0</version>
 
+				<plugin>
+					<groupId>org.openjfx</groupId>
+					<artifactId>javafx-maven-plugin</artifactId>
+					<version>0.0.5</version>
 					<configuration>
-						<archive>
-							<manifestEntries>
-								<Main-Class>${appClass}</Main-Class>
-							</manifestEntries>
-
-							<manifest>
-								<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-								<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-								<addClasspath>true</addClasspath>
-								<classpathLayoutType>custom</classpathLayoutType>
-								<customClasspathLayout>${artifact.groupId}-${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}</customClasspathLayout>
-							</manifest>
-						</archive>
+						<compress>2</compress>
+						<noHeaderFiles>true</noHeaderFiles>
+						<stripDebug>true</stripDebug>
+						<noManPages>true</noManPages>
+						<launcher>${archiveName}</launcher>
+						<mainClass>${appClass}</mainClass>
+						<jlinkImageName>${archiveName}</jlinkImageName>
+						<jlinkZipName>${archiveName}</jlinkZipName>
+						<jlinkExecutable>C:\Program Files\Java\jdk-21\bin\jlink.exe</jlinkExecutable>
 					</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-shade-plugin</artifactId>
-					<version>3.1.1</version>
 					<executions>
 						<execution>
+							<id>pp</id>
 							<phase>package</phase>
 							<goals>
-								<goal>shade</goal>
+								<goal>jlink</goal>
 							</goals>
 						</execution>
 					</executions>
-					<configuration>
-						<shadedArtifactAttached>false</shadedArtifactAttached>
-						<shadedClassifierName>shaded</shadedClassifierName>
-						<transformers>
-							<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-								<mainClass>${appClass}</mainClass>
-								<manifestEntries>
-									<Class-Path>.</Class-Path>
-								</manifestEntries>
-							</transformer>
-							<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-						</transformers>
-						<finalName>${archiveName}-${project.version}</finalName>
-					</configuration>
 				</plugin>
 
 				<plugin>
-					<groupId>com.akathist.maven.plugins.launch4j</groupId>
-					<artifactId>launch4j-maven-plugin</artifactId>
-					<version>1.7.12</version>
+					<groupId>org.panteleyev</groupId>
+					<artifactId>jpackage-maven-plugin</artifactId>
+					<version>1.4.0</version>
+					<configuration>
+						<name>${appName}</name>
+						<appVersion>${appVersion}</appVersion>
+						<vendor>JRebirth</vendor>
+						<destination>target/dist</destination>
+						<module>${mainModule}/${appClass}</module>
+						<runtimeImage>target/${archiveName}</runtimeImage>
+						<type>EXE</type>
+						<javaOptions>
+							<option>-Dfile.encoding=UTF-8</option>
+						</javaOptions>
+					</configuration>
 					<executions>
 						<execution>
-							<id>l4j-clui</id>
-							<phase>package</phase>
+							<id>pp</id>
+							<phase>install</phase>
 							<goals>
-								<goal>launch4j</goal>
+								<goal>jpackage</goal>
 							</goals>
-							<configuration>
-								<headerType>gui</headerType>
-								<jar>${project.build.directory}/${archiveName}-${project.version}.jar</jar>
-								<outfile>${project.build.directory}/${archiveName}-${project.version}.exe</outfile>
-								<downloadUrl>http://java.com/download</downloadUrl>
-								<classPath>
-									<mainClass>${appClass}</mainClass>
-									<addDependencies>false</addDependencies>
-									<preCp>.</preCp>
-								</classPath>
-								<icon>${exeIcon}</icon>
-								<jre>
-									<minVersion>1.8.0</minVersion>
-									<jdkPreference>preferJre</jdkPreference>
-								</jre>
-								<versionInfo>
-									<fileVersion>1.0.0.0</fileVersion>
-									<txtFileVersion>${project.version}</txtFileVersion>
-									<fileDescription>${project.name}</fileDescription>
-									<copyright>JRebirth 2019</copyright>
-									<productVersion>1.0.0.0</productVersion>
-									<txtProductVersion>1.0.0.0</txtProductVersion>
-									<productName>${project.name}</productName>
-									<companyName>JRebirth</companyName>
-									<internalName>${archiveName}</internalName>
-									<originalFilename>${archiveName}.exe</originalFilename>
-								</versionInfo>
-							</configuration>
 						</execution>
 					</executions>
 				</plugin>
@@ -189,38 +154,104 @@
 					<version>1.0</version>
 					<configuration>
 						<serverId>JRebirth_Sites</serverId>
-						<url>scp://s143909802.onlinehome.fr/kunden/homepages/14/d143909784/htdocs/jrebirth/apps</url>
+						<url>
+							scp://s143909802.onlinehome.fr/kunden/homepages/14/d143909784/htdocs/jrebirth/apps</url>
 					</configuration>
 				</plugin>
 
 
-				<!-- <plugin> <groupId>com.github.wvengen</groupId> <artifactId>proguard-maven-plugin</artifactId> <executions> <execution> <phase>package</phase> <goals> <goal>proguard</goal> </goals> </execution> 
-					</executions> <configuration> <options> <option>-keepclasseswithmembers public class * { public static void main(java.lang.String[]); } </option> <option>-allowaccessmodification</option> <option>-keepattributes 
-					Signature</option> <option>-keepattributes *Annotation*</option> <option>-dontoptimize</option> <option>-dontshrink</option> < ! - - Custom Option for JRebirth Presentation Engine - - > <option>-keep public 
-					class * implements org.jrebirth.af.api.ui.Model</option> </options> <libs> <lib>${java.home}/lib/rt.jar</lib> <lib>${java.home}/lib/ext/jfxrt.jar</lib> </libs> </configuration> </plugin> -->
+				<!-- <plugin> <groupId>com.github.wvengen</groupId>
+				<artifactId>proguard-maven-plugin</artifactId> <executions>
+				<execution> <phase>package</phase> <goals> <goal>proguard</goal>
+				</goals> </execution> 
+					</executions> <configuration> <options> <option>-keepclasseswithmembers public
+				class * { public static void main(java.lang.String[]); }
+				</option> <option>-allowaccessmodification</option>
+				<option>-keepattributes 
+					Signature</option> <option>-keepattributes *Annotation*</option>
+				<option>-dontoptimize</option> <option>-dontshrink</option> < !
+				- - Custom Option for JRebirth Presentation Engine - - >
+				<option>-keep public 
+					class * implements org.jrebirth.af.api.ui.Model</option> </options> <libs>
+				<lib>${java.home}/lib/rt.jar</lib>
+				<lib>${java.home}/lib/ext/jfxrt.jar</lib> </libs>
+				</configuration> </plugin> -->
 
-				<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>webstart-maven-plugin</artifactId> </plugin> -->
-				<!-- <plugin> <groupId>com.messapix.ftatr.jfxmobile</groupId> <artifactId>jfxmobile-maven-plugin</artifactId> <version>1.0.0-b1</version> <extensions>true</extensions> <configuration> <mainClass>${appClass}</mainClass> 
-					<android> <manifest>lib/android/AndroidManifest.xml</manifest> <androidSdk>D:\FXPort\android-sdk-windows</androidSdk> <dalvikSdk>D:\FXPort\dalvik-sdk</dalvikSdk> <processJava8Dependencies>true</processJava8Dependencies> 
-					<dependencies> <dependency> <groupId>com.gluonhq</groupId> <artifactId>charm-down-android</artifactId> <version>0.0.3</version> <scope>runtime</scope> </dependency> </dependencies> </android> <desktop> 
-					<dependencies> <dependency> <groupId>com.gluonhq</groupId> <artifactId>charm-down-desktop</artifactId> <version>0.0.3</version> <scope>runtime</scope> </dependency> </dependencies> </desktop> <ios> <dependencies> 
-					<dependency> <groupId>com.gluonhq</groupId> <artifactId>charm-down-ios</artifactId> <version>0.0.3</version> <scope>runtime</scope> </dependency> </dependencies> </ios> </configuration> </plugin> <plugin> 
-					<groupId>org.sonatype.install4j</groupId> <artifactId>install4j-maven-plugin</artifactId> <executions> <execution> <id>compile-installers</id> <phase>package</phase> <goals> <goal>compile</goal> </goals> 
-					<configuration> <projectFile>${project.basedir}/src/main/installer/jaf.install4j</projectFile> </configuration> </execution> </executions> </plugin> -->
+				<!-- <plugin> <groupId>org.codehaus.mojo</groupId>
+				<artifactId>webstart-maven-plugin</artifactId> </plugin> -->
+				<!-- <plugin> <groupId>com.messapix.ftatr.jfxmobile</groupId>
+				<artifactId>jfxmobile-maven-plugin</artifactId>
+				<version>1.0.0-b1</version> <extensions>true</extensions>
+				<configuration> <mainClass>${appClass}</mainClass> 
+					<android> <manifest>lib/android/AndroidManifest.xml</manifest>
+				<androidSdk>D:\FXPort\android-sdk-windows</androidSdk>
+				<dalvikSdk>D:\FXPort\dalvik-sdk</dalvikSdk>
+				<processJava8Dependencies>true</processJava8Dependencies> 
+					<dependencies> <dependency> <groupId>com.gluonhq</groupId>
+				<artifactId>charm-down-android</artifactId>
+				<version>0.0.3</version> <scope>runtime</scope> </dependency>
+				</dependencies> </android> <desktop> 
+					<dependencies> <dependency> <groupId>com.gluonhq</groupId>
+				<artifactId>charm-down-desktop</artifactId>
+				<version>0.0.3</version> <scope>runtime</scope> </dependency>
+				</dependencies> </desktop> <ios> <dependencies> 
+					<dependency> <groupId>com.gluonhq</groupId>
+				<artifactId>charm-down-ios</artifactId> <version>0.0.3</version>
+				<scope>runtime</scope> </dependency> </dependencies> </ios>
+				</configuration> </plugin> <plugin> 
+					<groupId>org.sonatype.install4j</groupId>
+				<artifactId>install4j-maven-plugin</artifactId> <executions>
+				<execution> <id>compile-installers</id> <phase>package</phase>
+				<goals> <goal>compile</goal> </goals> 
+					<configuration>
+				<projectFile>${project.basedir}/src/main/installer/jaf.install4j</projectFile>
+				</configuration> </execution> </executions> </plugin> -->
 
 
-				<!-- <plugin> <groupId>com.messapix.ftatr.jfxmobile</groupId> <artifactId>jfxmobile-maven-plugin</artifactId> <version>1.0.0-b1</version> <extensions>true</extensions> <executions> <execution> <phase>install</phase> 
-					<goals> <goal>android</goal> </goals> </execution> </executions> <configuration> <mainClass>${appClass}</mainClass> <android> <manifest>lib/android/AndroidManifest.xml</manifest> <androidSdk>D:\FXPort\android-sdk-windows</androidSdk> 
-					<dalvikSdk>D:\FXPort\dalvik-sdk</dalvikSdk> <processJava8Dependencies>true</processJava8Dependencies> <dependencies> <dependency> <groupId>com.gluonhq</groupId> <artifactId>charm-down-android</artifactId> 
-					<version>0.0.3</version> <scope>runtime</scope> </dependency> </dependencies> </android> <desktop> <dependencies> <dependency> <groupId>com.gluonhq</groupId> <artifactId>charm-down-desktop</artifactId> 
-					<version>0.0.3</version> <scope>runtime</scope> </dependency> </dependencies> </desktop> <ios> <dependencies> <dependency> <groupId>com.gluonhq</groupId> <artifactId>charm-down-ios</artifactId> <version>0.0.3</version> 
-					<scope>runtime</scope> </dependency> </dependencies> </ios> </configuration> </plugin> -->
+				<!-- <plugin> <groupId>com.messapix.ftatr.jfxmobile</groupId>
+				<artifactId>jfxmobile-maven-plugin</artifactId>
+				<version>1.0.0-b1</version> <extensions>true</extensions>
+				<executions> <execution> <phase>install</phase> 
+					<goals> <goal>android</goal> </goals> </execution> </executions>
+				<configuration> <mainClass>${appClass}</mainClass> <android>
+				<manifest>lib/android/AndroidManifest.xml</manifest>
+				<androidSdk>D:\FXPort\android-sdk-windows</androidSdk> 
+					<dalvikSdk>D:\FXPort\dalvik-sdk</dalvikSdk>
+				<processJava8Dependencies>true</processJava8Dependencies>
+				<dependencies> <dependency> <groupId>com.gluonhq</groupId>
+				<artifactId>charm-down-android</artifactId> 
+					<version>0.0.3</version> <scope>runtime</scope> </dependency> </dependencies>
+				</android> <desktop> <dependencies> <dependency>
+				<groupId>com.gluonhq</groupId>
+				<artifactId>charm-down-desktop</artifactId> 
+					<version>0.0.3</version> <scope>runtime</scope> </dependency> </dependencies>
+				</desktop> <ios> <dependencies> <dependency>
+				<groupId>com.gluonhq</groupId>
+				<artifactId>charm-down-ios</artifactId> <version>0.0.3</version> 
+					<scope>runtime</scope> </dependency> </dependencies> </ios> </configuration>
+				</plugin> -->
 
-				<!-- <plugin> <groupId>com.github.wvengen</groupId> <artifactId>proguard-maven-plugin</artifactId> <executions> <execution> <phase>package</phase> <goals> <goal>proguard</goal> </goals> </execution> 
-					</executions> <configuration> <options> <option>-keepclasseswithmembers public class * { public static void main(java.lang.String[]); } </option> <option>-allowaccessmodification</option> <option>-keepattributes 
-					Signature</option> <option>-keepattributes *Annotation*</option> <option>-keep @org.jrebirth.af.processor.annotation.Register public class *</option> <option>-keep @org.jrebirth.af.processor.annotation.RegistrationPoint 
-					public class *</option> <option>-keepclassmembers class * { @org.jrebirth.af.api.wave.annotation.OnWave &lt;methods&gt;; } </option> <option>-keepclassmembers class * { @org.jrebirth.af.api.wave.annotation.OnWave 
-					&lt;methods&gt;; } </option> <option>-dontoptimize</option> <option>-dontshrink</option> </options> <libs> <lib>${java.home}/lib/rt.jar</lib> <lib>${java.home}/lib/ext/jfxrt.jar</lib> </libs> </configuration> 
+				<!-- <plugin> <groupId>com.github.wvengen</groupId>
+				<artifactId>proguard-maven-plugin</artifactId> <executions>
+				<execution> <phase>package</phase> <goals> <goal>proguard</goal>
+				</goals> </execution> 
+					</executions> <configuration> <options> <option>-keepclasseswithmembers public
+				class * { public static void main(java.lang.String[]); }
+				</option> <option>-allowaccessmodification</option>
+				<option>-keepattributes 
+					Signature</option> <option>-keepattributes *Annotation*</option> <option>-keep
+				@org.jrebirth.af.processor.annotation.Register public class
+				*</option> <option>-keep
+				@org.jrebirth.af.processor.annotation.RegistrationPoint 
+					public class *</option> <option>-keepclassmembers class * {
+				@org.jrebirth.af.api.wave.annotation.OnWave &lt;methods&gt;; }
+				</option> <option>-keepclassmembers class * {
+				@org.jrebirth.af.api.wave.annotation.OnWave 
+					&lt;methods&gt;; } </option> <option>-dontoptimize</option>
+				<option>-dontshrink</option> </options> <libs>
+				<lib>${java.home}/lib/rt.jar</lib>
+				<lib>${java.home}/lib/ext/jfxrt.jar</lib> </libs>
+				</configuration> 
 					</plugin> -->
 
 			</plugins>
@@ -280,8 +311,10 @@
 									<goal>upload-single</goal>
 								</goals>
 								<configuration>
-									<fromFile>${project.build.directory}/${archiveName}-${project.version}.jar</fromFile>
-									<toFile>${deployPath}/${archiveName}-${project.version}.jar</toFile>
+									<fromFile>
+										${project.build.directory}/${archiveName}-${project.version}.jar</fromFile>
+									<toFile>
+										${deployPath}/${archiveName}-${project.version}.jar</toFile>
 								</configuration>
 							</execution>
 						</executions>
@@ -309,8 +342,10 @@
 									<goal>upload-single</goal>
 								</goals>
 								<configuration>
-									<fromFile>${project.build.directory}/${archiveName}-${project.version}.exe</fromFile>
-									<toFile>${deployPath}/${archiveName}-${project.version}.exe</toFile>
+									<fromFile>
+										${project.build.directory}/${archiveName}-${project.version}.exe</fromFile>
+									<toFile>
+										${deployPath}/${archiveName}-${project.version}.exe</toFile>
 								</configuration>
 							</execution>
 						</executions>
@@ -349,7 +384,8 @@
 			</build>
 		</profile>
 
-		<!-- Only one of the following profile must be activated : OJO, Bintray, JRebirth -->
+		<!-- Only one of the following profile must be activated : OJO, Bintray,
+		JRebirth -->
 
 		<!-- Open Source Artifactory -->
 		<profile>
@@ -361,11 +397,13 @@
 				<!-- Release repository -->
 				<repositoryId>oss-jfrog-artifactory</repositoryId>
 				<repositoryName>oss-jfrog-artifactory-releases</repositoryName>
-				<repositoryUrl>http://oss.jfrog.org/artifactory/oss-release-local</repositoryUrl>
+				<repositoryUrl>
+					http://oss.jfrog.org/artifactory/oss-release-local</repositoryUrl>
 				<!-- Snapshot repository -->
 				<snapshotRepositoryId>oss-jfrog-artifactory</snapshotRepositoryId>
 				<snapshotRepositoryName>oss-jfrog-artifactory-snapshots</snapshotRepositoryName>
-				<snapshotRepositoryUrl>http://oss.jfrog.org/artifactory/oss-snapshot-local</snapshotRepositoryUrl>
+				<snapshotRepositoryUrl>
+					http://oss.jfrog.org/artifactory/oss-snapshot-local</snapshotRepositoryUrl>
 			</properties>
 		</profile>
 
@@ -376,11 +414,13 @@
 				<!-- Release repository -->
 				<repositoryId>bintray-jrebirth-JRebirth-RIA</repositoryId>
 				<repositoryName>jrebirth-JRebirth-RIA</repositoryName>
-				<repositoryUrl>https://api.bintray.com/maven/jrebirth/JRebirth/RIA/</repositoryUrl>
+				<repositoryUrl>
+					https://api.bintray.com/maven/jrebirth/JRebirth/RIA/</repositoryUrl>
 				<!-- Snapshot repository -->
 				<snapshotRepositoryId>bintray-jrebirth-JRebirth-RIA</snapshotRepositoryId>
 				<snapshotRepositoryName>jrebirth-JRebirth-RIA</snapshotRepositoryName>
-				<snapshotRepositoryUrl>https://api.bintray.com/maven/jrebirth/JRebirth/RIA/</snapshotRepositoryUrl>
+				<snapshotRepositoryUrl>
+					https://api.bintray.com/maven/jrebirth/JRebirth/RIA/</snapshotRepositoryUrl>
 			</properties>
 		</profile>
 
@@ -395,7 +435,8 @@
 				<!-- Snapshot repository -->
 				<snapshotRepositoryId>JRebirth-Snapshot</snapshotRepositoryId>
 				<snapshotRepositoryName>JRebirth Snasphots Repository</snapshotRepositoryName>
-				<snapshotRepositoryUrl>http://repo.jrebirth.org/jrebirth-snapshot-local</snapshotRepositoryUrl>
+				<snapshotRepositoryUrl>
+					http://repo.jrebirth.org/jrebirth-snapshot-local</snapshotRepositoryUrl>
 			</properties>
 		</profile>
 	</profiles>
@@ -417,7 +458,8 @@
 	<scm>
 		<url>https://github.com/JRebirth/JRebirth-RIA-POM</url>
 		<connection>scm:git:git://github.com/JRebirth/JRebirth-RIA-POM.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com/JRebirth/JRebirth-RIA-POM</developerConnection>
+		<developerConnection>
+			scm:git:ssh://git@github.com/JRebirth/JRebirth-RIA-POM</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 </project>
