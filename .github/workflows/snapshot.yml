@@ -1,0 +1,20 @@
+name: Snapshot to GitHub Packages
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  snapshot:
+    uses: JRebirth/JRebirth-Organization-POM/.github/workflows/reusable-maven-snapshot.yml@master
+    with:
+      java-version: "25"
+      pom-path: org.jrebirth.ria/pom.xml
+      # Disable activeByDefault OJO so github-packages URLs apply
+      maven-args: "-B -Pgithub-packages,-OJO deploy"
+    secrets: inherit

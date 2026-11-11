@@ -137,6 +137,78 @@
 		</snapshotRepository>
 	</distributionManagement>
 
+	<!-- GitHub Packages feeds for SNAPSHOT parent/lib resolution -->
+	<repositories>
+		<repository>
+			<id>github-jrebirth-org</id>
+			<name>JRebirth Organization Packages</name>
+			<url>https://maven.pkg.github.com/JRebirth/JRebirth-Organization-POM</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>github-jrebirth-af</id>
+			<name>JRebirth AF Packages</name>
+			<url>https://maven.pkg.github.com/JRebirth/JRebirth</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>github-jrebirth-ria</id>
+			<name>JRebirth RIA Packages</name>
+			<url>https://maven.pkg.github.com/JRebirth/JRebirth-RIA-POM</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>github-jrebirth-org</id>
+			<name>JRebirth Organization Packages</name>
+			<url>https://maven.pkg.github.com/JRebirth/JRebirth-Organization-POM</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>github-jrebirth-af</id>
+			<name>JRebirth AF Packages</name>
+			<url>https://maven.pkg.github.com/JRebirth/JRebirth</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>github-jrebirth-ria</id>
+			<name>JRebirth RIA Packages</name>
+			<url>https://maven.pkg.github.com/JRebirth/JRebirth-RIA-POM</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+
 	<profiles>
 
 <!--		<profile>
@@ -179,7 +251,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.6</version>
+						<version>3.2.4</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -319,6 +391,20 @@
 				<snapshotRepositoryName>jrebirth-JRebirth-RIA</snapshotRepositoryName>
 				<snapshotRepositoryUrl>
 					https://api.bintray.com/maven/jrebirth/JRebirth/RIA/</snapshotRepositoryUrl>
+			</properties>
+		</profile>
+
+		<!-- Deploy SNAPSHOTs / releases to this repo's GitHub Packages.
+		     Activate with -Pgithub-packages,-OJO so default OJO URLs do not win. -->
+		<profile>
+			<id>github-packages</id>
+			<properties>
+				<repositoryId>github</repositoryId>
+				<repositoryName>GitHub Packages Releases</repositoryName>
+				<repositoryUrl>https://maven.pkg.github.com/JRebirth/JRebirth-RIA-POM</repositoryUrl>
+				<snapshotRepositoryId>github</snapshotRepositoryId>
+				<snapshotRepositoryName>GitHub Packages Snapshots</snapshotRepositoryName>
+				<snapshotRepositoryUrl>https://maven.pkg.github.com/JRebirth/JRebirth-RIA-POM</snapshotRepositoryUrl>
 			</properties>
 		</profile>
 	</profiles>
