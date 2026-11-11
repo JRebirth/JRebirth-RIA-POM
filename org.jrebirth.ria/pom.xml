@@ -23,6 +23,14 @@
 		<appClass>org.jrebirth.YourApplication</appClass>
 		<appVersion>1.0.0</appVersion>
 		<resources.base.path></resources.base.path>
+
+		<!-- Maven Central Portal (https://central.sonatype.org/publish/publish-portal-maven/). -->
+		<central.publishing.maven.plugin.version>0.12.0</central.publishing.maven.plugin.version>
+		<central.publishing.serverId>central</central.publishing.serverId>
+		<central.publishing.autoPublish>false</central.publishing.autoPublish>
+		<central.publishing.waitUntil>validated</central.publishing.waitUntil>
+		<gpg.executable>gpg</gpg.executable>
+		<gpg.signer>gpg</gpg.signer>
 	</properties>
 
 	<issueManagement>
@@ -93,6 +101,16 @@
 						<release>21</release>
 						<encoding>UTF-8</encoding>
 					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>3.2.8</version>
+				</plugin>
+				<plugin>
+					<groupId>org.sonatype.central</groupId>
+					<artifactId>central-publishing-maven-plugin</artifactId>
+					<version>${central.publishing.maven.plugin.version}</version>
 				</plugin>
 
 				<plugin>
@@ -251,7 +269,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>3.2.4</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -261,9 +278,65 @@
 								</goals>
 							</execution>
 						</executions>
+						<configuration>
+							<gpgExecutable>${gpg.executable}</gpgExecutable>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
+		</profile>
+
+		<!-- Maven Central Publisher Portal -->
+		<profile>
+			<id>deploy-central</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.sonatype.central</groupId>
+						<artifactId>central-publishing-maven-plugin</artifactId>
+						<extensions>true</extensions>
+						<configuration>
+							<publishingServerId>${central.publishing.serverId}</publishingServerId>
+							<autoPublish>${central.publishing.autoPublish}</autoPublish>
+							<waitUntil>${central.publishing.waitUntil}</waitUntil>
+							<deploymentName>org.jrebirth:ria:${project.version}</deploymentName>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<signer>${gpg.signer}</signer>
+							<gpgExecutable>${gpg.executable}</gpgExecutable>
+							<gpgArguments>
+								<arg>--pinentry-mode</arg>
+								<arg>loopback</arg>
+							</gpgArguments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>gpg-bc-ci</id>
+			<activation>
+				<property>
+					<name>env.MAVEN_GPG_KEY</name>
+				</property>
+			</activation>
+			<properties>
+				<gpg.signer>bc</gpg.signer>
+			</properties>
 		</profile>
 
 		<profile>
